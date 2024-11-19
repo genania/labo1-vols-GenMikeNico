@@ -1,0 +1,56 @@
+[
+  {
+    "id": "14567",
+    "city": "Toronto",
+    "date": "2025-04-12",
+    "value": 167
+  },
+  {
+    "id": "17890",
+    "city": "Guadeloupe",
+    "date": "2025-05-01",
+    "value": 340
+  },
+  {
+    "id": "19012",
+    "city": "Nouvelle-Orléans",
+    "date": "2024-11-03",
+    "value": 250
+  },
+  {
+    "id": "22345",
+    "city": "Martinique",
+    "date": "2024-09-25",
+    "value": 337
+  },
+  {
+    "id": "28901",
+    "city": "Las Vegas",
+    "date": "2025-05-13",
+    "value": 0
+  },
+  {
+    "id": "36789",
+    "city": "New-York",
+    "date": "2026-04-15",
+    "value": 67
+  },
+  {
+    "id": "45678",
+    "city": "Les Iles Baléares",
+    "date": "2024-12-06",
+    "value": 150
+  },
+  {
+    "id": "53456",
+    "city": "San Francisco",
+    "date": "2024-10-13",
+    "value": 327
+  },
+  {
+    "id": "12345",
+    "city": "Lévis",
+    "date": "2026-01-12",
+    "value": 69
+  }
+]
