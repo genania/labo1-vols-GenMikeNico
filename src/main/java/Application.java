@@ -1,8 +1,6 @@
-package src.main.java;
-
 import java.sql.*;
 import javax.swing.*;
-
+// import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -14,19 +12,53 @@ import java.util.List;
 import java.awt.image.BufferedImage;
 
 public class Application extends JFrame {
+  private static Point size = new Point(1200, 800);
   private JTable table;
   private DefaultTableModel tableModel;
 
-  // static List<Film> listeFilms;
   public static void main(String[] args) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+      System.out.println("Error : No look, no feel");
+    }
+
     SwingUtilities.invokeLater(() -> {
-      new Application().setVisible(true);
+      Application app = new Application();
+
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      app.setBounds(
+          (screenSize.width - size.x) / 2,
+          (screenSize.height - size.y) / 2,
+          size.x, size.y);
+
+      app.setExtendedState(JFrame.NORMAL);
+
+      app.setVisible(true);
     });
   }
 
   public Application() {
     setTitle("Liste des Films");
-    setSize(800, 600);
+    setSize(size.x, size.y);
+
+    setExtendedState(JFrame.NORMAL);
+    setMinimumSize(new Dimension(640, 480));
+
+    // Force normal state and specific bounds
+    addComponentListener(new java.awt.event.ComponentAdapter() {
+      @Override
+      public void componentResized(java.awt.event.ComponentEvent e) {
+        if (getExtendedState() != JFrame.NORMAL) {
+          setExtendedState(JFrame.NORMAL);
+          setBounds(
+              (Toolkit.getDefaultToolkit().getScreenSize().width - size.x) / 2,
+              (Toolkit.getDefaultToolkit().getScreenSize().height - size.y) / 2,
+              size.x, size.y);
+        }
+      }
+    });
+
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null); // Centrer la fenêtre
 
