@@ -21,4 +21,7 @@ public class GestionsVols {
       "Réservation d'un vol",
       "Terminer" };
 
+  public static void chargerVols() {
+
+  }
 }
