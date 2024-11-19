@@ -6,7 +6,7 @@ import modele.Vol;
 
 public class GestionsVols {
 
-  static final String FICHIER = "src/compagnies/Cie_Air_Relax.txt";
+  static final String FICHIER = "src/main/resources/donnees/vols.json";
   static final int MAX_PLACES = 340;
   static ArrayList<Vol> listeVols = new ArrayList<>();
   // MENU
