@@ -1,5 +1,5 @@
-package src.main.java.service;
+package service;
 
 public class GestionsVols {
-    
+
 }

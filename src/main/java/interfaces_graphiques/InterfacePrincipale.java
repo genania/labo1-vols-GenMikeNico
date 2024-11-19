@@ -1,5 +1,5 @@
-package src.main.java.interfaces_graphiques;
+package interfaces_graphiques;
 
 public class InterfacePrincipale {
-    
+
 }
