@@ -1,6 +1,8 @@
 package modele;
 
-public class Vol {
+import java.io.Serializable;
+
+public class Vol implements Serializable {
   private static int nombreVols = 0;
 
   private int numero;
@@ -56,16 +58,18 @@ public class Vol {
   public String toString() {
     StringBuilder table = new StringBuilder();
 
-    table.append(
-        "<tr style='border-collapse: collapse; background-color: #e6e4e1; color:#241e16;'><td style='padding: 3px; text-align: center;'>")
-        .append(this.numero)
-        .append("</td><td style='padding: 3px;'>")
-        .append(this.destination)
-        .append("</td><td style='padding: 3px; text-align: center;'>")
-        .append(this.depart.toString())
-        .append("</td><td style='padding: 3px; text-align: center;'>")
-        .append(this.reservations)
-        .append("</td></tr>");
+    table.append(this.numero + ", " + this.destination + ", " + this.depart + ", " + this.reservations);
+    // table.append(
+    // "<tr style='border-collapse: collapse; background-color: #e6e4e1;
+    // color:#241e16;'><td style='padding: 3px; text-align: center;'>")
+    // .append(this.numero)
+    // .append("</td><td style='padding: 3px;'>")
+    // .append(this.destination)
+    // .append("</td><td style='padding: 3px; text-align: center;'>")
+    // .append(this.depart.toString())
+    // .append("</td><td style='padding: 3px; text-align: center;'>")
+    // .append(this.reservations)
+    // .append("</td></tr>");
 
     return table.toString();
   }

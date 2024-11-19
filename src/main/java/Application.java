@@ -1,20 +1,30 @@
 import java.sql.*;
 import javax.swing.*;
-// import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import modele.DateVol;
+import modele.Vol;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Application extends JFrame {
-  private static Point size = new Point(1200, 800);
   private JTable table;
   private DefaultTableModel tableModel;
+
+  private static Point size = new Point(1200, 800);
+  static String path = "src/main/resources/donnees/vols.json";
+  static List<Vol> listeFilms;
 
   public static void main(String[] args) {
     try {
@@ -23,6 +33,7 @@ public class Application extends JFrame {
       System.out.println("Error : No look, no feel");
     }
 
+    readJsonFile(path);
     SwingUtilities.invokeLater(() -> {
       Application app = new Application();
 
@@ -101,42 +112,54 @@ public class Application extends JFrame {
     add(panel);
   }
 
-  public static void kevin() {
-    String sql = "SELECT * FROM films";
-    JFrame frame = new JFrame("App");
-    JButton button = new JButton("Lister");
-    frame.add(button);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  public static List<Vol> readJsonFile(String filePath) {
+    List<Vol> vols = new ArrayList<>();
 
-    button.addActionListener(e -> {
-      // try (Connection connection = App.getConnection();
-      // PreparedStatement statement = connection.prepareStatement(sql);
-      // ResultSet resultSet = statement.executeQuery()) {
-      // JFrame frame2 = new JFrame("Liste des affiches");
-      // JPanel titresSurTable = new JPanel();
-      // while (resultSet.next()) {
-      // String imageUrl = resultSet.getString("affiche");
-      // if (imageUrl.startsWith("http")) {
-      // try {
-      // ImageIcon imageIcon = new ImageIcon(new URL(imageUrl));
-      // JLabel imageLabel = new JLabel(imageIcon);
-      // titresSurTable.add(imageLabel);
-      // } catch (Exception ex) {
-      // ex.printStackTrace();
-      // }
-      // }
-      //
-      // }
-      // frame2.add(new JScrollPane(titresSurTable));
-      // frame2.setSize(300, 200);
-      // frame2.setVisible(true);
-      //
-      // } catch (Exception e1) {
-      // e1.printStackTrace();
-      // }
-    });
+    try {
+      // Read the entire file into a string
+      String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
-    frame.setSize(300, 200);
-    frame.setVisible(true);
+      // Remove whitespace and newlines for easier parsing
+      content = content.replaceAll("\\s+", "");
+
+      // Extract individual objects between curly braces
+      Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
+      Matcher matcher = pattern.matcher(content);
+
+      while (matcher.find()) {
+        String objectStr = matcher.group(1);
+        int numero = Integer.parseInt(extractValue(objectStr, "id"));
+        String destination = extractValue(objectStr, "destination");
+        DateVol date = new DateVol(
+            Integer.parseInt(extractValue(objectStr, "jour")),
+            Integer.parseInt(extractValue(objectStr, "mois")),
+            Integer.parseInt(extractValue(objectStr, "annee")));
+        int reservations = Integer.parseInt(extractValue(objectStr, "reservations"));
+
+        vols.add(new Vol(numero, destination, date, reservations));
+      }
+
+    } catch (IOException e) {
+      System.err.println("Error reading file: " + e.getMessage());
+    } catch (Exception e) {
+      System.err.println("Error parsing JSON: " + e.getMessage());
+    }
+
+    for (Vol vol : vols) {
+      System.out.println(vol);
+    }
+    return vols;
+  }
+
+  private static String extractValue(String json, String key) {
+    // Find the value after the key
+    String pattern = "\"" + key + "\":\"?([^,\"}]+)\"?";
+    Pattern p = Pattern.compile(pattern);
+    Matcher m = p.matcher(json);
+
+    if (m.find()) {
+      return m.group(1);
+    }
+    return "";
   }
 }
