@@ -24,20 +24,23 @@ public class Application extends JFrame {
 
   private static Point size = new Point(1200, 800);
   static String path = "src/main/resources/donnees/vols.json";
-  static List<Vol> listeFilms;
+  static List<Vol> listevols;
 
   public static void main(String[] args) {
+
+    readJsonFile(path);
+
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
       System.out.println("Error : No look, no feel");
     }
 
-    readJsonFile(path);
     SwingUtilities.invokeLater(() -> {
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
       Application app = new Application();
 
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       app.setBounds(
           (screenSize.width - size.x) / 2,
           (screenSize.height - size.y) / 2,
@@ -50,11 +53,11 @@ public class Application extends JFrame {
   }
 
   public Application() {
-    setTitle("Liste des Films");
+    setTitle("Liste des vols");
     setSize(size.x, size.y);
 
     setExtendedState(JFrame.NORMAL);
-    setMinimumSize(new Dimension(640, 480));
+    // setMinimumSize(new Dimension(640, 480));
 
     // Force normal state and specific bounds
     addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -74,13 +77,7 @@ public class Application extends JFrame {
     setLocationRelativeTo(null); // Centrer la fenêtre
 
     // Initialisation du modèle de table avec les colonnes demandées
-    tableModel = new DefaultTableModel(new Object[] { "Affiche", "ID", "Titre", "Réalisateur", "Année", "Durée" },
-        0) {
-      @Override
-      public Class<?> getColumnClass(int column) {
-        return column == 0 ? ImageIcon.class : Object.class; // Affiche la première colonne comme une image
-      }
-    };
+    tableModel = new DefaultTableModel(new Object[] { "numero", "destination", "depart", "reservations" }, 0);
     table = new JTable(tableModel);
 
     // Rendre le tableau triable
@@ -88,8 +85,9 @@ public class Application extends JFrame {
     TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
     table.setRowSorter(sorter);
 
-    // Bouton pour lister les films
+    // Bouton pour lister les vols
     JButton btnLister = new JButton("Lister");
+
     btnLister.setBackground(Color.BLUE);
     btnLister.setForeground(Color.WHITE);
     btnLister.setFocusPainted(false);
@@ -98,8 +96,9 @@ public class Application extends JFrame {
     btnLister.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // listeFilms = RequetesServeurNode.obtenirListeFilmsDeJSON("/films");
-        // afficherListeFilmsParJTable();
+        // listevols = RequetesServeurNode.obtenirListevolsDeJSON("/vols");
+        listevols = readJsonFile(path);
+        afficherListeVolsParJTable();
       }
     });
 
@@ -144,10 +143,10 @@ public class Application extends JFrame {
     } catch (Exception e) {
       System.err.println("Error parsing JSON: " + e.getMessage());
     }
-
-    for (Vol vol : vols) {
-      System.out.println(vol);
-    }
+    //
+    // for (Vol vol : vols) {
+    // System.out.println(vol);
+    // }
     return vols;
   }
 
@@ -162,4 +161,48 @@ public class Application extends JFrame {
     }
     return "";
   }
+
+  // Méthode pour afficher la liste des films dans un JTable
+  public static void afficherListeVolsParJTable() {
+    try {
+
+      // Rafraîchir la table avec les nouveaux films
+      Application filmApp = new Application();
+      filmApp.updateTableData(listevols);
+      filmApp.setVisible(true);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  // Méthode pour ajouter les données des vols dans le modèle de la table
+  public void updateTableData(List<Vol> vols) {
+    tableModel.setRowCount(0); // Vider les données actuelles du tableau
+    table.setRowHeight(80); // Augmentez la valeur pour une plus grande hauteur d'image si nécessaire
+    for (Vol vol : vols) {
+      tableModel.addRow(new Object[] { vol.getNumero(), vol.getDestination(),
+          vol.getDepart(),
+          vol.getReservations() });
+
+      // Charger l'image à partir de l'URL pour la colonne "Affiche"
+      // ImageIcon imageIcon = null;
+      // try {
+      // URL url = new URL(vol.getAffiche());
+      // BufferedImage image = javax.imageio.ImageIO.read(url);
+      // imageIcon = new ImageIcon(image.getScaledInstance(75, 80,
+      // Image.SCALE_SMOOTH));
+      // } catch (Exception e) {
+      // e.printStackTrace();
+      // // Image par défaut si l'URL ne peut être chargée
+      // imageIcon = new ImageIcon(new BufferedImage(75, 80,
+      // BufferedImage.TYPE_INT_ARGB));
+      // }
+
+      // Ajouter la ligne avec les colonnes demandées
+      // tableModel.addRow(new Object[] { imageIcon, vol.getId(), vol.getTitre(),
+      // vol.getRealisateur(),
+      // vol.getAnnee(), vol.getDuree() });
+    }
+  }
+
 }
