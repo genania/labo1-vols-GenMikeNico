@@ -26,8 +26,12 @@ public class Vol implements Serializable {
     return nombreVols;
   }
 
-  public DateVol setDepart(DateVol depart) {
-    return this.depart = depart;
+  public void setDepart(DateVol depart) {
+    this.depart = depart;
+  }
+
+  public void setDestination(String destination){
+    this.destination = destination;
   }
 
   public int setReservations(int reservations) {
