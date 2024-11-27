@@ -2,73 +2,73 @@
   {
     "id": 14567,
     "destination": "Toronto",
-      "jour": 12,
-      "mois": 4,
-      "annee": 2025,
+    "jour": 12,
+    "mois": 4,
+    "annee": 2025,
     "reservations": 167
   },
   {
     "id": 17890,
     "destination": "Guadeloupe",
-      "jour": 1,
-      "mois": 5,
-      "annee": 2025,
+    "jour": 1,
+    "mois": 5,
+    "annee": 2025,
     "reservations": 340
   },
   {
     "id": 19012,
     "destination": "Nouvelle-Orléans",
-      "jour": 3,
-      "mois": 5,
-      "annee": 2025,
+    "jour": 3,
+    "mois": 5,
+    "annee": 2025,
     "reservations": 262
   },
   {
     "id": 22345,
     "destination": "Martinique",
-      "jour": 25,
-      "mois": 4,
-      "annee": 2025,
+    "jour": 25,
+    "mois": 4,
+    "annee": 2025,
     "reservations": 224
   },
   {
     "id": 28901,
-    "destination": "LasVegas",
-      "jour": 13,
-      "mois": 5,
-      "annee": 2025,
+    "destination": "Las Vegas",
+    "jour": 13,
+    "mois": 5,
+    "annee": 2025,
     "reservations": 12
   },
   {
     "id": 36789,
-    "destination": "NewYork",
-      "jour": 15,
-      "mois": 4,
-      "annee": 2025,
+    "destination": "New York",
+    "jour": 15,
+    "mois": 4,
+    "annee": 2025,
     "reservations": 136
   },
   {
     "id": 45678,
-    "destination": "LesIlesBaléares",
-      "jour": 6,
-      "mois": 5,
-      "annee": 2025,
+    "destination": "Les Iles Baléares",
+    "jour": 6,
+    "mois": 5,
+    "annee": 2025,
     "reservations": 150
   },
   {
     "id": 53456,
-    "destination": "SanFrancisco",
-      "jour": 13,
-      "mois": 4,
-      "annee": 2025,
+    "destination": "San Francisco",
+    "jour": 13,
+    "mois": 4,
+    "annee": 2025,
     "reservations": 327
   },
   {
     "id": 65342,
     "destination": "Angleterre",
-      "jour": 12,
-      "mois": 13,
-      "annee": 2025,
+    "jour": 12,
+    "mois": 13,
+    "annee": 2025,
     "reservations": 0
   }
 ]

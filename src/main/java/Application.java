@@ -1,4 +1,3 @@
-import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -7,13 +6,11 @@ import modele.Vol;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.*;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -539,8 +536,8 @@ public class Application extends JFrame {
       String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
       // Remove whitespace and newlines for easier parsing
-      content = content.replaceAll("\\s+", "");
-
+      // content = content.replaceAll("\\s+", "");
+      content = content.replaceAll("(?=([^\"]*\"[^\"]*\")*[^\"]*$)\\s+", "");
       // Extract individual objects between curly braces
       Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
       Matcher matcher = pattern.matcher(content);
@@ -563,10 +560,6 @@ public class Application extends JFrame {
     } catch (Exception e) {
       System.err.println("Error parsing JSON: " + e.getMessage());
     }
-    //
-    // for (Vol vol : vols) {
-    // System.out.println(vol);
-    // }
     return vols;
   }
 
