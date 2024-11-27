@@ -2,19 +2,28 @@ package modele;
 
 import java.io.Serializable;
 
-public class Vol implements Serializable {
+public abstract class Vol implements Serializable {
   private static int nombreVols = 0;
+
+  private static enum categories {
+    basPrix,
+    charter,
+    prive,
+    regulier,
+  };
 
   private int numero;
   private String destination;
   private DateVol depart;
   private int reservations;
+  private int categorie;
 
-  public Vol(int numero, String destination, DateVol depart, int reservations) {
+  public Vol(int numero, String destination, DateVol depart, int reservations, int categorie) {
     this.numero = numero;
     this.destination = destination;
     this.depart = depart;
     this.reservations = reservations;
+    this.categorie = categorie;
   }
 
   public static int getNombreVols() {
@@ -30,7 +39,7 @@ public class Vol implements Serializable {
     this.depart = depart;
   }
 
-  public void setDestination(String destination){
+  public void setDestination(String destination) {
     this.destination = destination;
   }
 
@@ -54,8 +63,8 @@ public class Vol implements Serializable {
     return this.reservations;
   }
 
-  public Vol copy() {
-    return new Vol(this.numero, this.destination, this.depart, this.reservations);
+  public int getCategorie() {
+    return categorie;
   }
 
   @Override

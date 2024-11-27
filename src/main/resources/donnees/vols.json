@@ -5,7 +5,8 @@
     "jour": 12,
     "mois": 4,
     "annee": 2025,
-    "reservations": 167
+    "reservations": 167,
+    "categorie": 0
   },
   {
     "id": 17890,
@@ -13,7 +14,8 @@
     "jour": 1,
     "mois": 5,
     "annee": 2025,
-    "reservations": 340
+    "reservations": 340,
+    "categorie": 0
   },
   {
     "id": 19012,
@@ -21,7 +23,8 @@
     "jour": 3,
     "mois": 5,
     "annee": 2025,
-    "reservations": 262
+    "reservations": 262,
+    "categorie": 1
   },
   {
     "id": 22345,
@@ -29,7 +32,8 @@
     "jour": 25,
     "mois": 4,
     "annee": 2025,
-    "reservations": 224
+    "reservations": 224,
+    "categorie": 1
   },
   {
     "id": 28901,
@@ -37,7 +41,8 @@
     "jour": 13,
     "mois": 5,
     "annee": 2025,
-    "reservations": 12
+    "reservations": 12,
+    "categorie": 2
   },
   {
     "id": 36789,
@@ -45,7 +50,8 @@
     "jour": 15,
     "mois": 4,
     "annee": 2025,
-    "reservations": 136
+    "reservations": 136,
+    "categorie": 2
   },
   {
     "id": 45678,
@@ -53,7 +59,8 @@
     "jour": 6,
     "mois": 5,
     "annee": 2025,
-    "reservations": 150
+    "reservations": 150,
+    "categorie": 2
   },
   {
     "id": 53456,
@@ -61,7 +68,8 @@
     "jour": 13,
     "mois": 4,
     "annee": 2025,
-    "reservations": 327
+    "reservations": 327,
+    "categorie": 3
   },
   {
     "id": 65342,
@@ -69,6 +77,7 @@
     "jour": 12,
     "mois": 13,
     "annee": 2025,
-    "reservations": 0
+    "reservations": 0,
+    "categorie": 3
   }
 ]

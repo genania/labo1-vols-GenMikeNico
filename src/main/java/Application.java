@@ -3,6 +3,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import modele.DateVol;
 import modele.Vol;
+import modele.VolBasPrix;
+import modele.VolCharter;
+import modele.VolPrive;
+import modele.VolRegulier;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,7 +79,8 @@ public class Application extends JFrame {
     setLocationRelativeTo(null); // Centrer la fenêtre
 
     // Initialisation du modèle de table avec les colonnes demandées
-    tableModel = new EditableTableModel(new Object[] { "numero", "destination", "depart", "reservations" }, 0);
+    tableModel = new EditableTableModel(new Object[] { "numero", "destination", "depart", "reservations", "categorie" },
+        0);
     table = new JTable(tableModel);
 
     // Rendre le tableau triable
@@ -246,15 +252,39 @@ public class Application extends JFrame {
         int numero = Integer.parseInt(textNumero.getText());
         String destination = textDestination.getText();
         String[] dateParts = textDate.getText().split("-");
-        DateVol date = new DateVol(
+        DateVol depart = new DateVol(
             Integer.parseInt(dateParts[0]), // Jour
             Integer.parseInt(dateParts[1]), // Mois
             Integer.parseInt(dateParts[2]) // Année
         );
         int reservations = Integer.parseInt(textReservations.getText());
 
+        // TODO: mettre la valeur de Categorie ici
+        int categorie = 0;
+
         // Ajouter le nouveau vol à la liste
-        Vol nouveauVol = new Vol(numero, destination, date, reservations);
+        // Vol nouveauVol = new Vol(numero, destination, date, reservations, categorie);
+
+        Vol nouveauVol;
+
+        switch (categorie) {
+          case 0:
+            nouveauVol = new VolBasPrix(numero, destination, depart, reservations);
+            break;
+          case 1:
+            nouveauVol = new VolCharter(numero, destination, depart, reservations);
+            break;
+          case 2:
+            nouveauVol = new VolPrive(numero, destination, depart, reservations);
+            break;
+          case 3:
+            nouveauVol = new VolRegulier(numero, destination, depart, reservations);
+            break;
+          default:
+            nouveauVol = new VolRegulier(numero, destination, depart, reservations);
+            break;
+        }
+
         listevols.add(nouveauVol);
 
         // Enregistrer la liste mise à jour dans le fichier JSON
@@ -497,10 +527,15 @@ public class Application extends JFrame {
   public void updateTableData(List<Vol> vols) {
     tableModel.setRowCount(0); // Vider les données actuelles du tableau
     table.setRowHeight(80); // Augmentez la valeur pour une plus grande hauteur d'image si nécessaire
+
     for (Vol vol : vols) {
-      tableModel.addRow(new Object[] { vol.getNumero(), vol.getDestination(),
+      tableModel.addRow(new Object[] {
+          vol.getNumero(),
+          vol.getDestination(),
           vol.getDepart(),
-          vol.getReservations() });
+          vol.getReservations(),
+          vol.getCategorie(),
+      });
 
       // Charger l'image à partir de l'URL pour la colonne "Affiche"
       // ImageIcon imageIcon = null;
@@ -523,10 +558,9 @@ public class Application extends JFrame {
     }
   }
 
-  // **********************************************************************************************
-  // ****************************************** UTILITAIRE
-  // ****************************************
-  // **********************************************************************************************
+  // ***********
+  // UTILITAIRES
+  // ***********
 
   public static List<Vol> readJsonFile(String filePath) {
     List<Vol> vols = new ArrayList<>();
@@ -536,8 +570,8 @@ public class Application extends JFrame {
       String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
       // Remove whitespace and newlines for easier parsing
-      // content = content.replaceAll("\\s+", "");
       content = content.replaceAll("(?=([^\"]*\"[^\"]*\")*[^\"]*$)\\s+", "");
+
       // Extract individual objects between curly braces
       Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
       Matcher matcher = pattern.matcher(content);
@@ -546,13 +580,30 @@ public class Application extends JFrame {
         String objectStr = matcher.group(1);
         int numero = Integer.parseInt(extractValue(objectStr, "id"));
         String destination = extractValue(objectStr, "destination");
-        DateVol date = new DateVol(
+        DateVol depart = new DateVol(
             Integer.parseInt(extractValue(objectStr, "jour")),
             Integer.parseInt(extractValue(objectStr, "mois")),
             Integer.parseInt(extractValue(objectStr, "annee")));
         int reservations = Integer.parseInt(extractValue(objectStr, "reservations"));
+        int categorie = Integer.parseInt(extractValue(objectStr, "categorie"));
 
-        vols.add(new Vol(numero, destination, date, reservations));
+        switch (categorie) {
+          case 0:
+            vols.add(new VolBasPrix(numero, destination, depart, reservations));
+            break;
+          case 1:
+            vols.add(new VolCharter(numero, destination, depart, reservations));
+            break;
+          case 2:
+            vols.add(new VolPrive(numero, destination, depart, reservations));
+            break;
+          case 3:
+            vols.add(new VolRegulier(numero, destination, depart, reservations));
+            break;
+          default:
+            break;
+        }
+        // vols.add(new Vol(numero, destination, date, reservations, categorie));
       }
 
     } catch (IOException e) {
@@ -629,5 +680,4 @@ public class Application extends JFrame {
     // Rendre la fenêtre visible
     confirmationDialog.setVisible(true);
   }
-
 }
