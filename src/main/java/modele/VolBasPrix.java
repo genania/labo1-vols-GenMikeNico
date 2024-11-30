@@ -9,7 +9,7 @@ public class VolBasPrix extends Vol {
   private boolean services = false;
   private boolean prises = false;
 
-  public VolBasPrix(int numero, String destination, DateVol depart, int reservations) {
-    super(numero, destination, depart, reservations, 0);
+  public VolBasPrix(int numero, String destination, DateVol depart, int reservations, int maxReservations) {
+    super(numero, destination, depart, reservations, maxReservations, Categories.BAS_PRIX);
   }
 }

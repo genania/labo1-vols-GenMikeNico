@@ -2,7 +2,7 @@ package modele;
 
 import java.time.LocalDate;
 
-public class DateVol {
+public class DateVol implements Comparable<DateVol> {
   private int jour;
   private int mois;
   private int an;
@@ -24,6 +24,14 @@ public class DateVol {
     this.an = an;
   }
 
+  public DateVol(String dateStr) {
+    // La date doit être au format JJ-MM-YYYY
+    String[] dateParts = dateStr.split("-");
+    this.jour = Integer.parseInt(dateParts[0]);
+    this.mois = Integer.parseInt(dateParts[1]);
+    this.an = Integer.parseInt(dateParts[2]);
+  }
+
   // Les méthodes set et get habituelles
   public int getJour() {
     return this.jour;
@@ -37,52 +45,42 @@ public class DateVol {
     return this.an;
   }
 
-  // Valider trois
-  public static String validerDate(int jour, int mois, int an, boolean etat[]) {
-    String message = "";// Servira comme message par défaut
-    int nbJours;
-
-    // Valider le mois
+  public static boolean estDateValide(int jour, int mois, int annee) {
     if (mois < 1 || mois > 12) {
-      etat[1] = false;
-      message += "Mois " + mois + " n'est un mois valide [1-12]" + "\n";
-    } else {
-      etat[1] = true;
+      return false;
     }
-
-    // Valider le jour
-    if (etat[1]) {
-      nbJours = determinerNbJoursMois(mois, an);
-      if (jour > nbJours || jour <= 0) {
-        etat[0] = false;
-        message += "Jour invalide pour le mois de " + tabMois[mois].toLowerCase() + "\n";
-      } else {
-        etat[0] = true;
+    if (jour < 1 || jour > 31) {
+      return false;
+    }
+    if (mois == 4 || mois == 6 || mois == 9 || mois == 11) {
+      if (jour > 30) {
+        return false;
       }
-
-    } else {
-      message += "Impossible de valider le jour puisque votre mois est invalide";
     }
-
-    // Valider Année
-    int anneActuelle = dateActuelle.getYear();
-    if (an < anneActuelle) {
-      etat[2] = false;
-      message += "Année " + an + " ne peut pas étre inférieure à l'année actuelle, soit " + anneActuelle + "\n";
-    } else {
-      etat[2] = true;
+    if (mois == 2) {
+      boolean estBissextile = estBissextile(annee);
+      if (estBissextile && jour > 29) {
+        return false;
+      }
+      if (!estBissextile && jour > 28) {
+        return false;
+      }
     }
-    return message;
+    return true;
   }
 
-  public static boolean validerDateReservation(DateVol dateReservation) {
-    boolean etatDate = true;
-    if (dateReservation.getMois() < dateActuelle.getMonthValue()) {
-      etatDate = false;
-    } else if (dateReservation.getJour() < dateActuelle.getDayOfMonth()) {
-      etatDate = false;
+  public static boolean validerDateVol(DateVol dateVol) {
+
+    if (!estDateValide(dateVol.getJour(), dateVol.getMois(), dateVol.getAn())) {
+      return false;
     }
-    return etatDate;
+
+    LocalDate dateActuelleLocalDate = LocalDate.now();
+
+    DateVol dateActuelle = new DateVol(
+        dateActuelleLocalDate.getDayOfMonth(), dateActuelleLocalDate.getMonthValue(), dateActuelleLocalDate.getYear());
+
+    return dateActuelle.compareTo(dateVol) == -1;
   }
 
   public void setJour(int jour) {
@@ -141,11 +139,51 @@ public class DateVol {
     return filled + string;
   }
 
+  public static boolean estBonFormat(String dateStr) {
+    // Regex pour vérifier le format JJ-MM-AAAA
+    String regex = "^(\\d{2}|\\d{1})-(\\d{2}|\\d{1})-(\\d{4})$";
+
+    // Vérifier si dateStr correspond au format
+    return dateStr.matches(regex);
+  }
+
   @Override
   public String toString() {
     String leJour, leMois;
     leJour = fillLeft('0', 2, this.jour + "");
     leMois = fillLeft('0', 2, this.mois + "");
     return leJour + "/" + leMois + "/" + this.an;
+  }
+
+  @Override
+  public int compareTo(DateVol autreDate) {
+    // 0 Pour égal
+    // 1 si autreDate < this
+    // -1 si autreDate > this
+
+    // Comparer l'année
+    if (this.getAn() > autreDate.getAn()) {
+      return 1;
+    } else if (this.getAn() < autreDate.getAn()) {
+      return -1;
+    }
+
+    // Comparer le mois (si les années sont égales)
+    if (this.getMois() > autreDate.getMois()) {
+      return 1;
+    } else if (this.getMois() < autreDate.getMois()) {
+      return -1;
+    }
+
+    // Comparer le jour (si les années et les mois sont égaux)
+    if (this.getJour() > autreDate.getJour()) {
+      return 1;
+    } else if (this.getJour() < autreDate.getJour()) {
+      return -1;
+    }
+
+    // Si tout est égal
+    return 0;
+
   }
 } // fin de la classe Date

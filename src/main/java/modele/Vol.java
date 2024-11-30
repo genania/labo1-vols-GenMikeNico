@@ -4,25 +4,20 @@ import java.io.Serializable;
 
 public abstract class Vol implements Serializable {
   private static int nombreVols = 0;
-
-  private static enum categories {
-    basPrix,
-    charter,
-    prive,
-    regulier,
-  };
-
   private int numero;
   private String destination;
   private DateVol depart;
   private int reservations;
-  private int categorie;
+  private Categories categorie;
+  private int maxReservations;
 
-  public Vol(int numero, String destination, DateVol depart, int reservations, int categorie) {
+  public Vol(int numero, String destination, DateVol depart, int reservations, int maxReservations,
+      Categories categorie) {
     this.numero = numero;
     this.destination = destination;
     this.depart = depart;
     this.reservations = reservations;
+    this.maxReservations = maxReservations;
     this.categorie = categorie;
   }
 
@@ -47,6 +42,10 @@ public abstract class Vol implements Serializable {
     return this.reservations = reservations;
   }
 
+  public int setMaxReservations(int maxReservations) {
+    return this.maxReservations = maxReservations;
+  }
+
   public int getNumero() {
     return this.numero;
   }
@@ -63,7 +62,11 @@ public abstract class Vol implements Serializable {
     return this.reservations;
   }
 
-  public int getCategorie() {
+  public int getMaxReservations() {
+    return this.maxReservations;
+  }
+
+  public Categories getCategorie() {
     return categorie;
   }
 

@@ -1,0 +1,102 @@
+[
+  {
+    "id": 14567,
+    "destination": "Toronto",
+    "jour": 12,
+    "mois": 4,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 179,
+    "categorie": 0
+  },
+  {
+    "id": 17890,
+    "destination": "Guadeloupe",
+    "jour": 1,
+    "mois": 5,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 340,
+    "categorie": 0
+  },
+  {
+    "id": 19012,
+    "destination": "Nouvelle-Orléans",
+    "jour": 3,
+    "mois": 5,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 266,
+    "categorie": 1
+  },
+  {
+    "id": 28901,
+    "destination": "Las Vegas",
+    "jour": 13,
+    "mois": 5,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 12,
+    "categorie": 2
+  },
+  {
+    "id": 36789,
+    "destination": "New York",
+    "jour": 15,
+    "mois": 4,
+    "annee": 2026,
+    "maxReservations": 340,
+    "reservations": 136,
+    "categorie": 2
+  },
+  {
+    "id": 45678,
+    "destination": "Les Iles Baléares",
+    "jour": 6,
+    "mois": 5,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 150,
+    "categorie": 2
+  },
+  {
+    "id": 53456,
+    "destination": "San Francisco",
+    "jour": 13,
+    "mois": 4,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 232,
+    "categorie": 3
+  },
+  {
+    "id": 65342,
+    "destination": "Angleterre",
+    "jour": 12,
+    "mois": 12,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 0,
+    "categorie": 3
+  },
+  {
+    "id": 123123,
+    "destination": "ABC",
+    "jour": 11,
+    "mois": 10,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 0,
+    "categorie": 0
+  },
+  {
+    "id": 12312321,
+    "destination": "AACC",
+    "jour": 11,
+    "mois": 11,
+    "annee": 2025,
+    "maxReservations": 340,
+    "reservations": 0,
+    "categorie": 0
+  }
+]

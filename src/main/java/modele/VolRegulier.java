@@ -9,7 +9,7 @@ public class VolRegulier extends Vol {
   private boolean services = true;
   private boolean prises = true;
 
-  public VolRegulier(int numero, String destination, DateVol depart, int reservations) {
-    super(numero, destination, depart, reservations, 3);
+  public VolRegulier(int numero, String destination, DateVol depart, int reservations, int maxReservations) {
+    super(numero, destination, depart, reservations, maxReservations, Categories.REGULIER);
   }
 }

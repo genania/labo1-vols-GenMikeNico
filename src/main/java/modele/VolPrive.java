@@ -9,7 +9,7 @@ public class VolPrive extends Vol {
   private boolean services = true;
   private boolean prises = true;
 
-  public VolPrive(int numero, String destination, DateVol depart, int reservations) {
-    super(numero, destination, depart, reservations, 2);
+  public VolPrive(int numero, String destination, DateVol depart, int reservations, int maxReservations) {
+    super(numero, destination, depart, reservations, maxReservations, Categories.PRIVE);
   }
 }

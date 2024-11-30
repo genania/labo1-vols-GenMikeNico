@@ -9,7 +9,7 @@ public class VolCharter extends Vol {
   private boolean services = false;
   private boolean prises = false;
 
-  public VolCharter(int numero, String destination, DateVol depart, int reservations) {
-    super(numero, destination, depart, reservations, 1);
+  public VolCharter(int numero, String destination, DateVol depart, int reservations, int maxReservations) {
+    super(numero, destination, depart, reservations, maxReservations, Categories.CHARTER);
   }
 }
