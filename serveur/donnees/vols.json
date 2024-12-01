@@ -36,7 +36,7 @@
     "mois": 5,
     "annee": 2025,
     "maxReservations": 340,
-    "reservations": 12,
+    "reservations": 26,
     "categorie": 2
   },
   {
@@ -80,23 +80,13 @@
     "categorie": 3
   },
   {
-    "id": 123123,
-    "destination": "ABC",
-    "jour": 11,
-    "mois": 10,
-    "annee": 2025,
+    "id": 12876,
+    "destination": "Angleterre",
+    "jour": 12,
+    "mois": 12,
+    "annee": 2024,
     "maxReservations": 340,
     "reservations": 0,
-    "categorie": 0
-  },
-  {
-    "id": 12312321,
-    "destination": "AACC",
-    "jour": 11,
-    "mois": 11,
-    "annee": 2025,
-    "maxReservations": 340,
-    "reservations": 0,
-    "categorie": 0
+    "categorie": 2
   }
 ]

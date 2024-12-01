@@ -25,7 +25,7 @@ public class Application {
       app.setExtendedState(JFrame.NORMAL);
 
       app.setVisible(true);
-      app.afficherListeVolsParJTable();
+      app.updateTableData(app.listevols);
     });
   }
 }

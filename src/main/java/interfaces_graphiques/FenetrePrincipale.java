@@ -18,7 +18,7 @@ public class FenetrePrincipale extends JFrame {
     private JTable table;
     private EditableTableModel tableModel;
     private static Point size = new Point(1200, 800);
-    List<Vol> listevols;
+    public List<Vol> listevols;
 
     public FenetrePrincipale() {
         listevols = AccesDonnees.obtenirListeVols();
