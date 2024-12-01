@@ -1,16 +1,8 @@
 package interfaces_graphiques;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.List;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import modele.DateVol;
 import modele.Vol;
@@ -30,15 +22,26 @@ public class DialogModifier extends JDialog {
         int modelRow = tableFenetrePrincipale.convertRowIndexToModel(selectedRow);
         Vol volAModifier = listeVols.get(modelRow);
 
-        // Ouvrir un JDialog pré-rempli avec les informations du vol
+        // Configuration de la fenêtre de dialogue
         JDialog dialog = new JDialog(this, "Modifier un vol", true);
-        dialog.setSize(400, 400); // Augmenté pour inclure la catégorie
-        dialog.setLayout(new GridLayout(7, 2, 10, 10)); // Ajout d'une ligne supplémentaire pour la catégorie
+        dialog.setSize(400, 400);
+        dialog.setLayout(new BorderLayout());
+        dialog.getContentPane().setBackground(new Color(255, 250, 205)); // Jaune pâle (Edit Flight)
+
+        // Définir l'icône dans la barre de titre
+        ImageIcon iconModifier = new ImageIcon("src/icone/modifierAvion.png");
+        dialog.setIconImage(iconModifier.getImage());
+
+        // Ajouter une bordure noire autour de la fenêtre
+        dialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+
+        // Panneau principal pour le formulaire
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        formPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle (Edit Flight)
 
         // Champs pré-remplis
         JLabel labelNumero = new JLabel("Numéro de vol : ");
         JTextField textNumero = new JTextField(String.valueOf(volAModifier.getNumero()));
-        textNumero.setEditable(false); // Numéro non modifiable
 
         JLabel labelDestination = new JLabel("Destination : ");
         JTextField textDestination = new JTextField(volAModifier.getDestination());
@@ -59,65 +62,70 @@ public class DialogModifier extends JDialog {
         JLabel labelCategorie = new JLabel("Catégorie de vol : ");
         JLabel labelCategorieValue = new JLabel(volAModifier.getCategorie().toString());
 
-        // Boutons OK et Annuler
-        JButton btnOk = new JButton("OK");
+        // Ajouter les champs au formulaire
+        formPanel.add(labelNumero);
+        formPanel.add(textNumero);
+        formPanel.add(labelDestination);
+        formPanel.add(textDestination);
+        formPanel.add(labelDate);
+        formPanel.add(textDate);
+        formPanel.add(labelMaxReservations);
+        formPanel.add(textMaxReservations);
+        formPanel.add(labelReservations);
+        formPanel.add(textReservations);
+        formPanel.add(labelCategorie);
+        formPanel.add(labelCategorieValue);
+
+        // Boutons Confirmer et Annuler
+        JButton btnConfirmer = new JButton("Confirmer");
         JButton btnAnnuler = new JButton("Annuler");
 
-        // Personnalisation du bouton OK
-        btnOk.setBackground(Color.GREEN); // Fond vert
-        btnOk.setForeground(Color.WHITE); // Texte blanc
-        btnOk.setFocusPainted(false); // Désactiver l'effet de focus
-        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+        // Personnalisation des boutons
+        btnConfirmer.setBackground(new Color(159, 232, 159)); // Vert pâle pour confirmer
+        btnConfirmer.setForeground(Color.BLACK);
+        btnConfirmer.setFocusPainted(false);
+        btnConfirmer.setFont(new Font("Arial", Font.BOLD, 12));
+        btnConfirmer.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btnConfirmer.setPreferredSize(new Dimension(150, 40)); // Hauteur des boutons augmentée
 
-        // Personnalisation du bouton Annuler
-        btnAnnuler.setBackground(Color.RED); // Fond rouge
-        btnAnnuler.setForeground(Color.BLACK); // Texte noir
-        btnAnnuler.setFocusPainted(false); // Désactiver l'effet de focus
-        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12)); // Texte noir en gras
-        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+        btnAnnuler.setBackground(Color.RED); // Rouge pour annuler
+        btnAnnuler.setForeground(Color.BLACK);
+        btnAnnuler.setFocusPainted(false);
+        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12));
+        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btnAnnuler.setPreferredSize(new Dimension(150, 40)); // Hauteur des boutons augmentée
 
-        // Ajout des composants au JDialog
-        dialog.add(labelNumero);
-        dialog.add(textNumero);
+        // Panneau pour les boutons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle (Edit Flight)
+        buttonPanel.add(btnConfirmer);
+        buttonPanel.add(btnAnnuler);
 
-        dialog.add(labelDestination);
-        dialog.add(textDestination);
+        // Ajout des panneaux à la fenêtre
+        dialog.add(formPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-        dialog.add(labelDate);
-        dialog.add(textDate);
-
-        dialog.add(labelMaxReservations);
-        dialog.add(textMaxReservations);
-
-        dialog.add(labelReservations);
-        dialog.add(textReservations);
-
-        dialog.add(labelCategorie);
-        dialog.add(labelCategorieValue); // Afficher la catégorie
-
-        dialog.add(btnOk);
-        dialog.add(btnAnnuler);
-
-        // Action du bouton OK
-        btnOk.addActionListener(e -> {
+        // Action du bouton Confirmer
+        btnConfirmer.addActionListener(e -> {
             try {
                 // Récupérer les nouvelles valeurs
+                int numero = Integer.parseInt(textNumero.getText());
                 String destination = textDestination.getText();
                 String dateStr = textDate.getText();
-
                 int maxReservations = Integer.parseInt(textMaxReservations.getText());
                 int reservations = Integer.parseInt(textReservations.getText());
 
-                String messageErreur = Utilitaires.obtenirMessageErreurSaisie(dateStr, reservations, maxReservations);
-
-                if (messageErreur != "") {
-                    JOptionPane.showMessageDialog(dialog, messageErreur, "Erreur", JOptionPane.ERROR_MESSAGE);
-                    return;
+                // Valider que le numéro est unique
+                boolean numeroExistant = listeVols.stream()
+                        .anyMatch(vol -> vol.getNumero() == numero && vol != volAModifier);
+                if (numeroExistant) {
+                    throw new IllegalArgumentException("Un vol avec ce numéro existe déjà.");
                 }
 
                 DateVol date = new DateVol(dateStr);
 
                 // Mettre à jour le vol sélectionné
+                volAModifier.setNumero(numero);
                 volAModifier.setDestination(destination);
                 volAModifier.setDepart(date);
                 volAModifier.setMaxReservations(maxReservations);
@@ -128,8 +136,11 @@ public class DialogModifier extends JDialog {
 
                 // Fermer le JDialog
                 dialog.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Veuillez entrer des données valides.", "Erreur",
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Veuillez entrer un numéro valide.", "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(dialog, ex.getMessage(), "Erreur",
                         JOptionPane.ERROR_MESSAGE);
             }
         });

@@ -3,15 +3,19 @@ package interfaces_graphiques;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.util.List;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 import modele.Categories;
 import modele.DateVol;
@@ -24,9 +28,27 @@ import service.AccesDonnees;
 
 public class DialogAjouter extends JDialog {
     public DialogAjouter(List<Vol> listeVols) {
+        // Configuration de la fenêtre de dialogue
         JDialog dialog = new JDialog(this, "Ajouter un vol", true);
         dialog.setSize(400, 400);
-        dialog.setLayout(new GridLayout(7, 2, 10, 10)); // 6 lignes pour inclure la liste déroulante
+        dialog.setLayout(new BorderLayout());
+
+        // Définir une icône pour la fenêtre (en haut à gauche de la barre de titre)
+        dialog.setIconImage(new ImageIcon("src/icone/ajouterAvion.png").getImage());
+
+        // Ajouter une bannière en haut
+        JLabel lblBanner = new JLabel(new ImageIcon("src/icone/banner.png"));
+        dialog.add(lblBanner, BorderLayout.NORTH);
+
+        // Définir une couleur de fond pour la fenêtre principale
+        dialog.getContentPane().setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+
+        // Ajouter une bordure noire autour de la fenêtre
+        dialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+
+        // Panneau pour les champs de formulaire
+        JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        formPanel.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
 
         // Champs pour les données
         JLabel labelNumero = new JLabel("Numéro de vol : ");
@@ -38,61 +60,63 @@ public class DialogAjouter extends JDialog {
         JLabel labelDate = new JLabel("Date (JJ-MM-AAAA) : ");
         JTextField textDate = new JTextField();
 
-        JLabel labelMaxReservations = new JLabel("Maximun de réservations : ");
+        JLabel labelMaxReservations = new JLabel("Maximum de réservations : ");
         JTextField textMaxReservations = new JTextField();
-        textMaxReservations.setText("340"); // Par défaut, 0 réservations
+        textMaxReservations.setText("340");
 
         JLabel labelReservations = new JLabel("Réservations : ");
         JTextField textReservations = new JTextField();
-        textReservations.setText("0"); // Par défaut, 0 réservations
+        textReservations.setText("0");
 
-        // Liste déroulante pour la catégorie
         JLabel labelCategorie = new JLabel("Catégorie de vol : ");
         JComboBox<Categories> comboCategorie = new JComboBox<>(Categories.values());
 
-        // Boutons OK et Annuler
-        JButton btnOk = new JButton("OK");
+        // Boutons Confirmer et Annuler
+        JButton btnConfirmer = new JButton("Confirmer");
         JButton btnAnnuler = new JButton("Annuler");
 
-        // Personnalisation du bouton OK
-        btnOk.setBackground(Color.GREEN); // Fond vert
-        btnOk.setForeground(Color.WHITE); // Texte blanc
-        btnOk.setFocusPainted(false); // Désactiver l'effet de focus
-        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+        // Personnalisation des boutons
+        btnConfirmer.setPreferredSize(new java.awt.Dimension(100, 50)); // Largeur 100, Hauteur 50
+        btnConfirmer.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        btnConfirmer.setForeground(Color.BLACK);
+        btnConfirmer.setFocusPainted(false);
+        btnConfirmer.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        // Personnalisation du bouton Annuler
-        btnAnnuler.setBackground(Color.RED); // Fond rouge
-        btnAnnuler.setForeground(Color.BLACK); // Texte noir
-        btnAnnuler.setFocusPainted(false); // Désactiver l'effet de focus
-        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12)); // Texte noir en gras
-        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+        btnAnnuler.setPreferredSize(new java.awt.Dimension(100, 50)); // Largeur 100, Hauteur 50
+        btnAnnuler.setBackground(Color.RED); // Rouge pour annuler
+        btnAnnuler.setForeground(Color.BLACK);
+        btnAnnuler.setFocusPainted(false);
+        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12));
+        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        // Ajout des composants au JDialog
-        dialog.add(labelNumero);
-        dialog.add(textNumero);
+        // Ajout des champs au panneau de formulaire
+        formPanel.add(labelNumero);
+        formPanel.add(textNumero);
+        formPanel.add(labelDestination);
+        formPanel.add(textDestination);
+        formPanel.add(labelDate);
+        formPanel.add(textDate);
+        formPanel.add(labelMaxReservations);
+        formPanel.add(textMaxReservations);
+        formPanel.add(labelReservations);
+        formPanel.add(textReservations);
+        formPanel.add(labelCategorie);
+        formPanel.add(comboCategorie);
 
-        dialog.add(labelDestination);
-        dialog.add(textDestination);
+        // Panneau pour les boutons
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0)); // 1 ligne, 2 colonnes, espacement horizontal de
+                                                                      // 10
+        buttonPanel.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        buttonPanel.add(btnConfirmer);
+        buttonPanel.add(btnAnnuler);
 
-        dialog.add(labelDate);
-        dialog.add(textDate);
+        // Ajout des panneaux au dialogue
+        dialog.add(formPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-        dialog.add(labelMaxReservations);
-        dialog.add(textMaxReservations);
-
-        dialog.add(labelReservations);
-        dialog.add(textReservations);
-
-        dialog.add(labelCategorie);
-        dialog.add(comboCategorie); // Ajout de la liste déroulante
-
-        dialog.add(btnOk);
-        dialog.add(btnAnnuler);
-
-        // Action du bouton OK
-        btnOk.addActionListener(e -> {
+        // Action du bouton Confirmer
+        btnConfirmer.addActionListener(e -> {
             try {
-                // Récupérer les valeurs saisies
                 int numero = Integer.parseInt(textNumero.getText());
                 String destination = textDestination.getText();
                 int reservations = Integer.parseInt(textReservations.getText());
@@ -101,19 +125,15 @@ public class DialogAjouter extends JDialog {
 
                 String messageErreur = Utilitaires.obtenirMessageErreurSaisie(dateStr, reservations, maxReservations);
 
-                if (messageErreur != "") {
+                if (!messageErreur.isEmpty()) {
                     JOptionPane.showMessageDialog(dialog, messageErreur, "Erreur", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 DateVol depart = new DateVol(dateStr);
-
-                // Récupérer la catégorie sélectionnée
                 Categories categorie = (Categories) comboCategorie.getSelectedItem();
 
-                // Créer le vol selon la catégorie choisie
                 Vol nouveauVol;
-
                 switch (categorie) {
                     case BAS_PRIX:
                         nouveauVol = new VolBasPrix(numero, destination, depart, reservations, maxReservations);
@@ -131,16 +151,9 @@ public class DialogAjouter extends JDialog {
                         throw new IllegalArgumentException("Catégorie invalide.");
                 }
 
-                // Ajouter le nouveau vol à la liste
                 listeVols.add(nouveauVol);
-
-                // Enregistrer la liste mise à jour dans le fichier JSON
                 AccesDonnees.enregistrerListeVols(listeVols);
-
-                // Fermer le JDialog actuel
                 dialog.dispose();
-
-                // Afficher la confirmation
                 afficherConfirmationVol(nouveauVol);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog, "Veuillez entrer des données valides.", "Erreur",
@@ -151,17 +164,29 @@ public class DialogAjouter extends JDialog {
         // Action du bouton Annuler
         btnAnnuler.addActionListener(e -> dialog.dispose());
 
+        // Ajouter un KeyListener global pour détecter l'appui sur la touche Entrée
+        dialog.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Appuyer sur Entrée exécute l'action du bouton Confirmer
+                    btnConfirmer.doClick(); // Cela simule un clic sur le bouton Confirmer
+                }
+            }
+        });
+
+        // Activation de l'écouteur sur les champs et la fenêtre
+        textNumero.requestFocusInWindow(); // Focus sur le premier champ
+
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 
     private void afficherConfirmationVol(Vol vol) {
-        // Créer un JDialog pour la confirmation
         JDialog confirmationDialog = new JDialog(this, "Confirmation", true);
         confirmationDialog.setSize(300, 150);
         confirmationDialog.setLayout(new BorderLayout());
 
-        // Texte de confirmation
         JLabel message = new JLabel(
                 "<html>Le vol a été enregistré avec succès !<br>" +
                         "Numéro : " + vol.getNumero() + "<br>" +
@@ -172,20 +197,17 @@ public class DialogAjouter extends JDialog {
                 JLabel.CENTER);
         confirmationDialog.add(message, BorderLayout.CENTER);
 
-        // Afficher la fenêtre au centre de l'application
         confirmationDialog.setLocationRelativeTo(this);
 
-        // Lancer un thread pour fermer automatiquement la fenêtre après 3 secondes
         new Thread(() -> {
             try {
-                Thread.sleep(3000); // Pause de 3 secondes
-                confirmationDialog.dispose(); // Fermer la fenêtre
+                Thread.sleep(1500);
+                confirmationDialog.dispose();
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }).start();
 
-        // Rendre la fenêtre visible
         confirmationDialog.setVisible(true);
     }
 }

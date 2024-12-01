@@ -9,7 +9,7 @@ public class Application {
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     } catch (Exception e) {
-      System.out.println("Error : No look, no feel");
+      e.printStackTrace();
     }
 
     SwingUtilities.invokeLater(() -> {

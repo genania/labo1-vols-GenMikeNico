@@ -1,19 +1,8 @@
 package interfaces_graphiques;
 
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.List;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 import modele.Vol;
 import service.AccesDonnees;
 
@@ -34,8 +23,20 @@ public class DialogReserver extends JDialog {
         // Ouvrir un JDialog pré-rempli avec les informations du vol
         JDialog dialog = new JDialog(this, "Réserver un vol", true);
         dialog.setSize(400, 430);
-        // dialog.setLayout(new BoxLayout(BoxLayout.Y_AXIS)); // Disposition verticale
-        dialog.setLayout(new GridLayout(9, 1, 10, 10));
+        dialog.setLayout(new BorderLayout());
+        dialog.getContentPane().setBackground(new Color(178, 255, 194)); // Vert pâle (Add Passenger)
+
+        // Ajouter une bordure noire autour de la fenêtre complète
+        dialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+
+        // Charger l'icône pour le titre
+        ImageIcon iconReserver = new ImageIcon("src/icone/reserverAvion.png");
+        Image scaledImage = iconReserver.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        dialog.setIconImage(scaledImage);
+
+        // Panel principal pour les champs
+        JPanel mainPanel = new JPanel(new GridLayout(8, 1, 10, 10));
+        mainPanel.setBackground(new Color(178, 255, 194)); // Vert pâle (Add Passenger)
 
         // Champs pré-remplis
         JLabel labelNumero = new JLabel("Numéro de vol : " + volAReserver.getNumero());
@@ -44,62 +45,61 @@ public class DialogReserver extends JDialog {
                 volAReserver.getDepart().getMois() + "-" + volAReserver.getDepart().getAn());
         JLabel labelMaxReservations = new JLabel("Maximum de réservation : " + volAReserver.getMaxReservations());
         JLabel labelReservationsActuel = new JLabel("Réservations actuelles : " + volAReserver.getReservations());
-        JLabel labelCategorie = new JLabel("Categorie : " + volAReserver.getCategorie().toString());
+        JLabel labelCategorie = new JLabel("Catégorie : " + volAReserver.getCategorie().toString());
 
         // Panel pour la ligne "Nombre de réservations à ajouter"
-        JPanel reservationPanel = new JPanel();
-        reservationPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Aligner les composants sur la même ligne
+        JPanel reservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        reservationPanel.setBackground(new Color(178, 255, 194)); // Vert pâle (Add Passenger)
         JLabel labelReservations = new JLabel("Nombre de réservations à ajouter : ");
-        JTextField textReservations = new JTextField(10); // Taille du champ texte
+        JTextField textReservations = new JTextField(10);
         reservationPanel.add(labelReservations);
         reservationPanel.add(textReservations);
 
-        // Boutons OK et Annuler
-        JButton btnOk = new JButton("OK");
+        mainPanel.add(labelNumero);
+        mainPanel.add(labelDestination);
+        mainPanel.add(labelDate);
+        mainPanel.add(labelMaxReservations);
+        mainPanel.add(labelReservationsActuel);
+        mainPanel.add(labelCategorie);
+        mainPanel.add(reservationPanel);
+
+        // Boutons Confirmer et Annuler
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        buttonPanel.setBackground(new Color(178, 255, 194)); // Vert pâle (Add Passenger)
+
+        JButton btnConfirmer = new JButton("Confirmer");
+        btnConfirmer.setBackground(new Color(159, 232, 159)); // Vert pâle pour confirmer
+        btnConfirmer.setForeground(Color.BLACK);
+        btnConfirmer.setFocusPainted(false);
+        btnConfirmer.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btnConfirmer.setPreferredSize(new Dimension(100, 40)); // Hauteur ajustée
+
         JButton btnAnnuler = new JButton("Annuler");
+        btnAnnuler.setBackground(Color.RED); // Rouge pour annuler
+        btnAnnuler.setForeground(Color.BLACK);
+        btnAnnuler.setFocusPainted(false);
+        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btnAnnuler.setPreferredSize(new Dimension(100, 40)); // Hauteur ajustée
 
-        // Personnalisation du bouton OK
-        btnOk.setBackground(Color.GREEN); // Fond vert
-        btnOk.setForeground(Color.WHITE); // Texte blanc
-        btnOk.setFocusPainted(false); // Désactiver l'effet de focus
-        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
-
-        // Personnalisation du bouton Annuler
-        btnAnnuler.setBackground(Color.RED); // Fond rouge
-        btnAnnuler.setForeground(Color.BLACK); // Texte noir
-        btnAnnuler.setFocusPainted(false); // Désactiver l'effet de focus
-        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12)); // Texte noir en gras
-        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+        buttonPanel.add(btnConfirmer);
+        buttonPanel.add(btnAnnuler);
 
         // Ajout des composants au JDialog
-        dialog.add(labelNumero);
-        dialog.add(labelDestination);
-        dialog.add(labelDate);
-        dialog.add(labelMaxReservations);
-        dialog.add(labelReservationsActuel);
-        dialog.add(reservationPanel); // Ajouter le panel de réservation sur une seule ligne
-        dialog.add(labelCategorie);
+        dialog.add(mainPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Action du bouton OK
-        btnOk.addActionListener(e -> {
+        // Action du bouton Confirmer
+        btnConfirmer.addActionListener(e -> {
             try {
-                // Récupérer les nouvelles valeurs
                 int reservations = Integer.parseInt(textReservations.getText());
                 if (reservations <= 0) {
                     throw new IllegalArgumentException("Le nombre de réservations doit être supérieur à 0.");
                 }
-
                 if (volAReserver.getMaxReservations() < reservations + volAReserver.getReservations()) {
-                    throw new IllegalArgumentException("Le nombre de place disponible est insuffisante.");
+                    throw new IllegalArgumentException("Le nombre de places disponibles est insuffisant.");
                 }
-
-                // Mettre à jour le vol sélectionné
                 volAReserver.setReservations(reservations + volAReserver.getReservations());
-
-                // Mettre à jour la liste et le fichier JSON
                 AccesDonnees.enregistrerListeVols(listeVols);
-
-                // Fermer le JDialog
                 dialog.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Veuillez entrer un nombre valide.", "Erreur",
@@ -111,6 +111,9 @@ public class DialogReserver extends JDialog {
 
         // Action du bouton Annuler
         btnAnnuler.addActionListener(e -> dialog.dispose());
+
+        // Ajout d'un KeyListener pour activer le bouton Confirmer avec la touche Entrée
+        textReservations.addActionListener(e -> btnConfirmer.doClick());
 
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);

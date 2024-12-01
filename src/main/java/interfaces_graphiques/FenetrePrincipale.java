@@ -2,7 +2,6 @@ package interfaces_graphiques;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 import modele.Vol;
@@ -11,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.stream.Collectors;
 import utilitaires.EditableTableModel;
 
 public class FenetrePrincipale extends JFrame {
@@ -25,35 +25,26 @@ public class FenetrePrincipale extends JFrame {
         setTitle("Gestion des vols");
         setSize(size.x, size.y);
 
-        setExtendedState(JFrame.NORMAL);
-
-        // Force normal state and specific bounds
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            @Override
-            public void componentResized(java.awt.event.ComponentEvent e) {
-                if (getExtendedState() != JFrame.NORMAL) {
-                    setExtendedState(JFrame.NORMAL);
-                    setBounds(
-                            (Toolkit.getDefaultToolkit().getScreenSize().width - size.x) / 2,
-                            (Toolkit.getDefaultToolkit().getScreenSize().height - size.y) / 2,
-                            size.x, size.y);
-                }
-            }
-        });
+        // Remplacer l'icône Java par l'icône d'avion
+        ImageIcon iconAvion = new ImageIcon("src/icone/avion.png");
+        Image scaledImage = iconAvion.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        setIconImage(scaledImage);
+        ImageIcon scaledIconAvion = new ImageIcon(scaledImage);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centrer la fenêtre
+        setLocationRelativeTo(null);
 
         // Initialisation du modèle de table avec les colonnes demandées
         tableModel = new EditableTableModel(
                 new Object[] { "Numero", "Destination", "Départ", "Réservations", "Catégorie" },
                 0);
         table = new JTable(tableModel);
-        // Personnalisation des en-têtes du tableau via JTableHeader
+
+        // Personnalisation des en-têtes du tableau
         JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setFont(new Font("Arial", Font.BOLD, 14)); // Police en gras et taille 14
-        tableHeader.setForeground(Color.BLACK); // Couleur du texte
-        tableHeader.setBackground(new Color(200, 200, 200)); // Fond gris clair pour les en-têtes
+        tableHeader.setFont(new Font("Arial", Font.BOLD, 14));
+        tableHeader.setForeground(Color.BLACK);
+        tableHeader.setBackground(new Color(200, 200, 200));
 
         // Centrer les strings et les ints et le tableau
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
@@ -64,134 +55,106 @@ public class FenetrePrincipale extends JFrame {
 
         // Rendre le tableau triable
         table.setAutoCreateRowSorter(true);
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        TableRowSorter<EditableTableModel> sorter = new TableRowSorter<>(tableModel);
         table.setRowSorter(sorter);
 
-        // Chargement des icône
-        ImageIcon iconAvion = new ImageIcon("src/icone/avion.jpg");
-        ImageIcon iconAjouterAvion = new ImageIcon("src/icone/ajouterAvion.jpg");
+        // Chargement des icônes
+        ImageIcon iconAjouterAvion = new ImageIcon("src/icone/ajouterAvion.png");
         ImageIcon iconModifier = new ImageIcon("src/icone/modifierAvion.png");
         ImageIcon iconReserver = new ImageIcon("src/icone/reserverAvion.png");
         ImageIcon iconSupprimer = new ImageIcon("src/icone/supprimerAvion.png");
+        ImageIcon iconRechercher = new ImageIcon("src/icone/rechercherAvion.png"); // Icône pour le bouton Rechercher
 
-        // Redimensionnez l'icône si nécessaire
-        Image scaledImage = iconAvion.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        ImageIcon scaledIconAvion = new ImageIcon(scaledImage);
-        Image scaledImageUn = iconAjouterAvion.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        ImageIcon scalediconAjouterAvion = new ImageIcon(scaledImageUn);
+        // Redimensionner les icônes si nécessaire
+        Image scaledImageAjouter = iconAjouterAvion.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         Image scaledImageModifier = iconModifier.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         Image scaledImageReserver = iconReserver.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         Image scaledImageSupprimer = iconSupprimer.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        Image scaledImageRechercher = iconRechercher.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+        ImageIcon scaledIconAjouter = new ImageIcon(scaledImageAjouter);
         ImageIcon scaledIconModifier = new ImageIcon(scaledImageModifier);
         ImageIcon scaledIconReserver = new ImageIcon(scaledImageReserver);
         ImageIcon scaledIconSupprimer = new ImageIcon(scaledImageSupprimer);
+        ImageIcon scaledIconRechercher = new ImageIcon(scaledImageRechercher);
 
-        // Création d'un JLabel pour afficher l'icône
-        JLabel lblIconAvion = new JLabel(scaledIconAvion);
-        JLabel lblIconAjouterAvion = new JLabel(scalediconAjouterAvion);
-        JLabel lblIconModifier = new JLabel(scaledIconModifier);
-        JLabel lblIconReserver = new JLabel(scaledIconReserver);
-        JLabel lblIconSupprimer = new JLabel(scaledIconSupprimer);
+        // Boutons avec actions
+        JButton btnLister = createButton("Lister", scaledIconAvion, new Color(173, 216, 230),
+                e -> updateTableData(listevols));
+        JButton btnAjouter = createButton("Ajouter un vol", scaledIconAjouter, new Color(159, 232, 159), // Vert pâle
+                                                                                                         // (Add Flight)
+                e -> {
+                    DialogAjouter dialogAjouter = new DialogAjouter(listevols);
+                    updateTableData(listevols);
+                });
+        JButton btnModifier = createButton("Modifier un vol", scaledIconModifier, new Color(255, 250, 205), // Jaune
+                                                                                                            // pâle
+                                                                                                            // (Edit
+                                                                                                            // Flight)
+                e -> {
+                    DialogModifier dialogModifier = new DialogModifier(listevols, table);
+                    updateTableData(listevols);
+                });
+        JButton btnSupprimer = createButton("Supprimer un vol", scaledIconSupprimer, new Color(255, 182, 193), // Rose
+                                                                                                               // pâle
+                                                                                                               // (Delete
+                                                                                                               // Flight)
+                e -> {
+                    DialogSupprimer dialogSupprimer = new DialogSupprimer(listevols, table);
+                    updateTableData(listevols);
+                });
+        JButton btnReservation = createButton("Réserver un vol", scaledIconReserver, new Color(178, 255, 194), // Vert
+                                                                                                               // pâle
+                                                                                                               // (Add
+                                                                                                               // Passenger)
+                e -> {
+                    DialogReserver dialogReserver = new DialogReserver(listevols, table);
+                    updateTableData(listevols);
+                });
 
-        // Bouton pour lister les vols
-        JButton btnLister = new JButton("Lister");
-        btnLister.setBackground(Color.BLUE);
-        btnLister.setForeground(Color.black);
-        btnLister.setFocusPainted(false);
-        btnLister.setFont(new Font("Arial", Font.BOLD, 12));
-        btnLister.setMargin(new Insets(5, 5, 5, 5));
-        btnLister.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateTableData(listevols);
-            }
-        });
+        // Bouton pour rechercher un vol
+        JButton btnRechercher = createButton("Rechercher", scaledIconRechercher, new Color(135, 206, 235), // Bleu clair
+                                                                                                           // (Search
+                                                                                                           // Flight)
+                e -> {
+                    DialogRechercher dialogRechercher = new DialogRechercher(listevols, table);
+                    dialogRechercher.setVisible(true); // Afficher la boîte de dialogue
+                });
 
-        // Bouton pour ajouter un vol
-        JButton btnAjouter = new JButton("Ajouter un vol");
-        btnAjouter.setBackground(Color.GREEN);
-        btnAjouter.setForeground(Color.black);
-        btnAjouter.setFocusPainted(false);
-        btnAjouter.setFont(new Font("Arial", Font.BOLD, 12));
-        btnAjouter.setMargin(new Insets(5, 5, 5, 5));
-        btnAjouter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DialogAjouter dialogAjouter = new DialogAjouter(listevols);
-                updateTableData(listevols); // Mettre à jour la table pour afficher le nouveau vol
-            }
-        });
-
-        // Bouton pour modifier un vol
-        JButton btnModifier = new JButton("Modifier un vol");
-        btnModifier.setBackground(Color.YELLOW);
-        btnModifier.setForeground(Color.BLACK);
-        btnModifier.setFocusPainted(false);
-        btnModifier.setFont(new Font("Arial", Font.BOLD, 12));
-        btnModifier.setMargin(new Insets(5, 5, 5, 5));
-        btnModifier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DialogModifier dialogModifier = new DialogModifier(listevols, table);
-                updateTableData(listevols); // Mettre à jour la table
-            }
-        });
-
-        // Bouton pour supprimer un vol
-        JButton btnSupprimer = new JButton("Supprimer un vol");
-        btnSupprimer.setBackground(Color.RED);
-        btnSupprimer.setForeground(Color.BLACK);
-        btnSupprimer.setFocusPainted(false);
-        btnSupprimer.setFont(new Font("Arial", Font.BOLD, 12));
-        btnSupprimer.setMargin(new Insets(5, 5, 5, 5));
-        btnSupprimer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DialogSupprimer dialogSupprimer = new DialogSupprimer(listevols, table);
-                updateTableData(listevols); // Mettre à jour la table
-            }
-        });
-
-        // Bouton pour réserver un vol
-        JButton btnReservation = new JButton("Réservation d'un vol");
-        btnReservation.setBackground(new Color(173, 216, 230)); // Bleu pâle (RGB)
-                                                                // btnReservation.setForeground(Color.black);
-        btnReservation.setFocusPainted(false);
-        btnReservation.setFont(new Font("Arial", Font.BOLD, 12));
-        btnReservation.setMargin(new Insets(5, 5, 5, 5));
-        btnReservation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DialogReserver dialogReserver = new DialogReserver(listevols, table);
-                updateTableData(listevols); // Mettre à jour la table
-            }
-        });
-
-        // Mise en page de l'interface avec le bouton en haut
+        // Mise en page de l'interface
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        // Ajout de l'icône et des boutons au panel
-        buttonPanel.add(lblIconAvion); // Ajout de l'icône
         buttonPanel.add(btnLister);
-        buttonPanel.add(lblIconAjouterAvion);
         buttonPanel.add(btnAjouter);
-        buttonPanel.add(lblIconModifier);
-        buttonPanel.add(btnModifier);
-        buttonPanel.add(lblIconSupprimer);
-        buttonPanel.add(btnSupprimer);
-        buttonPanel.add(lblIconReserver);
         buttonPanel.add(btnReservation);
+        buttonPanel.add(btnModifier);
+        buttonPanel.add(btnSupprimer);
+        buttonPanel.add(btnRechercher);
 
         panel.add(buttonPanel, BorderLayout.NORTH);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         add(panel);
+
+        updateTableData(listevols); // Charger les données initiales
     }
 
-    // Méthode pour ajouter les données des vols dans le modèle de la table
+    private JButton createButton(String text, Icon icon, Color bgColor, ActionListener actionListener) {
+        JButton button = new JButton(text, icon);
+        button.setBackground(bgColor);
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setPreferredSize(new Dimension(150, 80));
+        button.addActionListener(actionListener);
+        return button;
+    }
+
     public void updateTableData(List<Vol> vols) {
-        tableModel.setRowCount(0); // Vider les données actuelles du tableau
-        table.setRowHeight(80); // Augmentez la valeur pour une plus grande hauteur d'image si nécessaire
+        tableModel.setRowCount(0);
+        table.setRowHeight(80);
 
         for (Vol vol : vols) {
             tableModel.addRow(new Object[] {

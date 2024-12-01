@@ -42,6 +42,10 @@ public abstract class Vol implements Serializable {
     return this.reservations = reservations;
   }
 
+  public int setNumero(int numero) {
+    return this.numero = numero;
+  }
+
   public int setMaxReservations(int maxReservations) {
     return this.maxReservations = maxReservations;
   }
