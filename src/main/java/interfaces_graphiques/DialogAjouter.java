@@ -1,9 +1,11 @@
 package interfaces_graphiques;
 
+import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.List;
-
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -51,6 +53,19 @@ public class DialogAjouter extends JDialog {
         // Boutons OK et Annuler
         JButton btnOk = new JButton("OK");
         JButton btnAnnuler = new JButton("Annuler");
+
+        // Personnalisation du bouton OK
+        btnOk.setBackground(Color.GREEN); // Fond vert
+        btnOk.setForeground(Color.WHITE); // Texte blanc
+        btnOk.setFocusPainted(false); // Désactiver l'effet de focus
+        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+
+        // Personnalisation du bouton Annuler
+        btnAnnuler.setBackground(Color.RED); // Fond rouge
+        btnAnnuler.setForeground(Color.BLACK); // Texte noir
+        btnAnnuler.setFocusPainted(false); // Désactiver l'effet de focus
+        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12)); // Texte noir en gras
+        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
 
         // Ajout des composants au JDialog
         dialog.add(labelNumero);

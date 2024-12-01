@@ -3,7 +3,9 @@ package interfaces_graphiques;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
-
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -52,12 +54,22 @@ public class DialogReserver extends JDialog {
         reservationPanel.add(labelReservations);
         reservationPanel.add(textReservations);
 
-        // Boutons OK et Annuler dans un panneau séparé
-        JPanel buttonPanel = new JPanel();
+        // Boutons OK et Annuler
         JButton btnOk = new JButton("OK");
         JButton btnAnnuler = new JButton("Annuler");
-        buttonPanel.add(btnOk);
-        buttonPanel.add(btnAnnuler);
+
+        // Personnalisation du bouton OK
+        btnOk.setBackground(Color.GREEN); // Fond vert
+        btnOk.setForeground(Color.WHITE); // Texte blanc
+        btnOk.setFocusPainted(false); // Désactiver l'effet de focus
+        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
+
+        // Personnalisation du bouton Annuler
+        btnAnnuler.setBackground(Color.RED); // Fond rouge
+        btnAnnuler.setForeground(Color.BLACK); // Texte noir
+        btnAnnuler.setFocusPainted(false); // Désactiver l'effet de focus
+        btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12)); // Texte noir en gras
+        btnAnnuler.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Bordure noire
 
         // Ajout des composants au JDialog
         dialog.add(labelNumero);
@@ -67,7 +79,6 @@ public class DialogReserver extends JDialog {
         dialog.add(labelReservationsActuel);
         dialog.add(reservationPanel); // Ajouter le panel de réservation sur une seule ligne
         dialog.add(labelCategorie);
-        dialog.add(buttonPanel); // Ajouter le panneau des boutons
 
         // Action du bouton OK
         btnOk.addActionListener(e -> {

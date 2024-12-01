@@ -7,7 +7,7 @@ public class Application {
 
   public static void main(String[] args) {
     try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     } catch (Exception e) {
       System.out.println("Error : No look, no feel");
     }
