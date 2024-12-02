@@ -134,6 +134,9 @@ public class DialogModifier extends JDialog {
                 // Mettre à jour la liste et le fichier JSON
                 AccesDonnees.enregistrerListeVols(listeVols);
 
+                // Afficher la fenêtre de confirmation
+                afficherConfirmationVol(volAModifier);
+
                 // Fermer le JDialog
                 dialog.dispose();
             } catch (NumberFormatException ex) {
@@ -151,4 +154,74 @@ public class DialogModifier extends JDialog {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+
+    private void afficherConfirmationVol(Vol vol) {
+        JDialog confirmationDialog = new JDialog(this, "Confirmation", true);
+        confirmationDialog.setSize(500, 300); // Taille augmentée pour afficher tout le contenu
+        confirmationDialog.setLayout(new BorderLayout());
+
+        // Définir une icône pour la fenêtre (en haut à gauche de la barre de titre)
+        ImageIcon icon = new ImageIcon("src/icone/modifierAvion.png");
+        confirmationDialog.setIconImage(icon.getImage());
+
+        // Panneau principal
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3)); // Bordure noire
+
+        // Message principal
+        JLabel message = new JLabel("<html><div style='text-align: center;'>"
+                + "Les modifications ont été enregistrées avec succès !</div></html>");
+        message.setFont(new Font("Arial", Font.BOLD, 16));
+        message.setHorizontalAlignment(SwingConstants.CENTER);
+        message.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // Ajouter du padding
+        mainPanel.add(message, BorderLayout.NORTH);
+
+        // Détails du vol
+        JPanel detailsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+        detailsPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Espacement interne
+
+        JLabel numeroLabel = new JLabel("Numéro : " + vol.getNumero());
+        JLabel destinationLabel = new JLabel("Destination : " + vol.getDestination());
+        JLabel dateLabel = new JLabel("Date : " + vol.getDepart().getJour() + "-" + vol.getDepart().getMois() + "-"
+                + vol.getDepart().getAn());
+        JLabel categorieLabel = new JLabel("Catégorie : " + vol.getCategorie());
+
+        Font detailsFont = new Font("Arial", Font.PLAIN, 14);
+        numeroLabel.setFont(detailsFont);
+        destinationLabel.setFont(detailsFont);
+        dateLabel.setFont(detailsFont);
+        categorieLabel.setFont(detailsFont);
+
+        detailsPanel.add(numeroLabel);
+        detailsPanel.add(destinationLabel);
+        detailsPanel.add(dateLabel);
+        detailsPanel.add(categorieLabel);
+
+        mainPanel.add(detailsPanel, BorderLayout.CENTER);
+
+        // Bouton OK
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(new Font("Arial", Font.BOLD, 14));
+        okButton.setBackground(new Color(159, 232, 159)); // Vert pâle
+        okButton.setForeground(Color.BLACK);
+        okButton.setFocusPainted(false);
+        okButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        okButton.setPreferredSize(new Dimension(100, 40));
+
+        buttonPanel.add(okButton);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Action du bouton OK
+        okButton.addActionListener(e -> confirmationDialog.dispose());
+
+        confirmationDialog.add(mainPanel);
+        confirmationDialog.setLocationRelativeTo(this);
+        confirmationDialog.setVisible(true);
+    }
+
 }

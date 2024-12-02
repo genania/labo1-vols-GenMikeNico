@@ -92,8 +92,7 @@ public class DialogRechercher extends JDialog {
             String valeurRecherche = textRecherche.getText().trim();
 
             if (valeurRecherche.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Veuillez entrer une valeur à rechercher.", "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
+                afficherFenetreInformation("Veuillez entrer une valeur à rechercher.");
                 return;
             }
 
@@ -117,8 +116,7 @@ public class DialogRechercher extends JDialog {
 
             // Afficher les résultats dans le tableau
             if (resultats.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Aucun vol trouvé.", "Information",
-                        JOptionPane.INFORMATION_MESSAGE);
+                afficherFenetreInformation("Aucun vol trouvé.");
             } else {
                 EditableTableModel tableModel = (EditableTableModel) table.getModel();
                 tableModel.setRowCount(0); // Vider les données actuelles
@@ -151,5 +149,47 @@ public class DialogRechercher extends JDialog {
         });
 
         setVisible(true);
+    }
+
+    // Méthode personnalisée pour afficher une fenêtre d'information
+    private void afficherFenetreInformation(String message) {
+        JDialog infoDialog = new JDialog(this, "Information", true);
+        infoDialog.setSize(400, 200);
+        infoDialog.setLayout(new BorderLayout());
+        infoDialog.getContentPane().setBackground(new Color(173, 216, 230)); // Bleu clair
+        infoDialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+
+        // Définir une icône personnalisée
+        ImageIcon iconInfo = new ImageIcon("src/icone/information.png"); // Chemin de l'icône
+        infoDialog.setIconImage(iconInfo.getImage());
+
+        // Message d'information
+        JLabel lblMessage = new JLabel("<html><div style='text-align: center;'>" + message + "</div></html>");
+        lblMessage.setFont(new Font("Arial", Font.BOLD, 16));
+        lblMessage.setForeground(Color.BLACK);
+        lblMessage.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMessage.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        infoDialog.add(lblMessage, BorderLayout.CENTER);
+
+        // Bouton OK
+        JButton btnOk = new JButton("OK");
+        btnOk.setFont(new Font("Arial", Font.BOLD, 14));
+        btnOk.setBackground(new Color(159, 232, 159)); // Vert pâle
+        btnOk.setForeground(Color.BLACK);
+        btnOk.setFocusPainted(false);
+        btnOk.setPreferredSize(new Dimension(120, 40));
+        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+        btnOk.addActionListener(e -> infoDialog.dispose());
+
+        // Ajouter le bouton au bas de la fenêtre
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(173, 216, 230)); // Même fond que la fenêtre
+        buttonPanel.add(btnOk);
+        infoDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        infoDialog.setLocationRelativeTo(this);
+        infoDialog.setVisible(true);
     }
 }

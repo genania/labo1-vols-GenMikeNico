@@ -1,29 +1,10 @@
 package interfaces_graphiques;
 
-import java.awt.Color;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-
-import modele.Categories;
-import modele.DateVol;
-import modele.Vol;
-import modele.VolBasPrix;
-import modele.VolCharter;
-import modele.VolPrive;
-import modele.VolRegulier;
+import javax.swing.*;
+import javax.swing.border.Border;
+import modele.*;
 import service.AccesDonnees;
 
 public class DialogAjouter extends JDialog {
@@ -41,14 +22,14 @@ public class DialogAjouter extends JDialog {
         dialog.add(lblBanner, BorderLayout.NORTH);
 
         // Définir une couleur de fond pour la fenêtre principale
-        dialog.getContentPane().setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        dialog.getContentPane().setBackground(new Color(159, 232, 159)); // Vert pâle
 
         // Ajouter une bordure noire autour de la fenêtre
         dialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
         // Panneau pour les champs de formulaire
         JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
-        formPanel.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        formPanel.setBackground(new Color(159, 232, 159)); // Vert pâle
 
         // Champs pour les données
         JLabel labelNumero = new JLabel("Numéro de vol : ");
@@ -76,14 +57,14 @@ public class DialogAjouter extends JDialog {
         JButton btnAnnuler = new JButton("Annuler");
 
         // Personnalisation des boutons
-        btnConfirmer.setPreferredSize(new java.awt.Dimension(100, 50)); // Largeur 100, Hauteur 50
-        btnConfirmer.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        btnConfirmer.setPreferredSize(new Dimension(100, 50));
+        btnConfirmer.setBackground(new Color(159, 232, 159)); // Vert pâle
         btnConfirmer.setForeground(Color.BLACK);
         btnConfirmer.setFocusPainted(false);
         btnConfirmer.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        btnAnnuler.setPreferredSize(new java.awt.Dimension(100, 50)); // Largeur 100, Hauteur 50
-        btnAnnuler.setBackground(Color.RED); // Rouge pour annuler
+        btnAnnuler.setPreferredSize(new Dimension(100, 50));
+        btnAnnuler.setBackground(Color.RED);
         btnAnnuler.setForeground(Color.BLACK);
         btnAnnuler.setFocusPainted(false);
         btnAnnuler.setFont(new Font("Arial", Font.BOLD, 12));
@@ -104,9 +85,8 @@ public class DialogAjouter extends JDialog {
         formPanel.add(comboCategorie);
 
         // Panneau pour les boutons
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0)); // 1 ligne, 2 colonnes, espacement horizontal de
-                                                                      // 10
-        buttonPanel.setBackground(new Color(159, 232, 159)); // Vert pâle (Add Flight)
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        buttonPanel.setBackground(new Color(159, 232, 159));
         buttonPanel.add(btnConfirmer);
         buttonPanel.add(btnAnnuler);
 
@@ -126,7 +106,7 @@ public class DialogAjouter extends JDialog {
                 String messageErreur = Utilitaires.obtenirMessageErreurSaisie(dateStr, reservations, maxReservations);
 
                 if (!messageErreur.isEmpty()) {
-                    JOptionPane.showMessageDialog(dialog, messageErreur, "Erreur", JOptionPane.ERROR_MESSAGE);
+                    afficherFenetreErreur(messageErreur);
                     return;
                 }
 
@@ -156,58 +136,95 @@ public class DialogAjouter extends JDialog {
                 dialog.dispose();
                 afficherConfirmationVol(nouveauVol);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Veuillez entrer des données valides.", "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
+                afficherFenetreErreur("Veuillez entrer des données valides.");
             }
         });
 
         // Action du bouton Annuler
         btnAnnuler.addActionListener(e -> dialog.dispose());
 
-        // Ajouter un KeyListener global pour détecter l'appui sur la touche Entrée
-        dialog.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Appuyer sur Entrée exécute l'action du bouton Confirmer
-                    btnConfirmer.doClick(); // Cela simule un clic sur le bouton Confirmer
-                }
-            }
-        });
-
-        // Activation de l'écouteur sur les champs et la fenêtre
-        textNumero.requestFocusInWindow(); // Focus sur le premier champ
-
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 
+    private void afficherFenetreErreur(String message) {
+        JDialog erreurDialog = new JDialog(this, "Erreur", true);
+        erreurDialog.setSize(450, 200); // Taille ajustée
+        erreurDialog.setLayout(new BorderLayout());
+        erreurDialog.getContentPane().setBackground(new Color(255, 182, 193)); // Rose clair
+
+        // Ajouter une bordure noire à la boîte de dialogue
+        erreurDialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+
+        // Définir une icône personnalisée
+        ImageIcon iconErreur = new ImageIcon("src/icone/erreur.png");
+        erreurDialog.setIconImage(iconErreur.getImage());
+
+        // Message
+        JLabel lblMessage = new JLabel("<html><div style='text-align: center;'>" + message + "</div></html>");
+        lblMessage.setFont(new Font("Arial", Font.BOLD, 16));
+        lblMessage.setForeground(Color.BLACK);
+        lblMessage.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
+        lblMessage.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Ajouter du padding autour du texte
+        erreurDialog.add(lblMessage, BorderLayout.CENTER);
+
+        // Bouton OK
+        JButton btnOk = new JButton("OK");
+        btnOk.setFont(new Font("Arial", Font.BOLD, 14));
+        btnOk.setBackground(Color.RED);
+        btnOk.setForeground(Color.WHITE);
+        btnOk.setFocusPainted(false);
+        btnOk.setPreferredSize(new Dimension(100, 40));
+        btnOk.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+        btnOk.addActionListener(e -> erreurDialog.dispose());
+
+        // Panneau pour le bouton
+        JPanel panelBouton = new JPanel();
+        panelBouton.setBackground(new Color(255, 182, 193)); // Rose clair
+        panelBouton.add(btnOk);
+        erreurDialog.add(panelBouton, BorderLayout.SOUTH);
+
+        erreurDialog.setLocationRelativeTo(this);
+        erreurDialog.setVisible(true);
+    }
+
     private void afficherConfirmationVol(Vol vol) {
         JDialog confirmationDialog = new JDialog(this, "Confirmation", true);
-        confirmationDialog.setSize(300, 150);
+        confirmationDialog.setSize(500, 300);
         confirmationDialog.setLayout(new BorderLayout());
 
+        // Définir une icône pour la fenêtre
+        ImageIcon icon = new ImageIcon("src/icone/modifierAvion.png");
+        confirmationDialog.setIconImage(icon.getImage());
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(255, 250, 205)); // Jaune pâle
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+
         JLabel message = new JLabel(
-                "<html>Le vol a été enregistré avec succès !<br>" +
-                        "Numéro : " + vol.getNumero() + "<br>" +
-                        "Destination : " + vol.getDestination() + "<br>" +
-                        "Date : " + vol.getDepart().getJour() + "-" +
-                        vol.getDepart().getMois() + "-" + vol.getDepart().getAn() + "<br>" +
-                        "Catégorie : " + vol.getCategorie() + "</html>",
-                JLabel.CENTER);
-        confirmationDialog.add(message, BorderLayout.CENTER);
+                "<html><div style='text-align: center;'>Le vol a été enregistré avec succès !</div></html>");
+        message.setFont(new Font("Arial", Font.BOLD, 16));
+        message.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(message, BorderLayout.NORTH);
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(255, 250, 205));
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(new Font("Arial", Font.BOLD, 14));
+        okButton.setBackground(new Color(159, 232, 159));
+        okButton.setForeground(Color.BLACK);
+        okButton.setFocusPainted(false);
+        okButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        okButton.setPreferredSize(new Dimension(100, 40));
+
+        okButton.addActionListener(e -> confirmationDialog.dispose());
+        buttonPanel.add(okButton);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        confirmationDialog.add(mainPanel);
         confirmationDialog.setLocationRelativeTo(this);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(1500);
-                confirmationDialog.dispose();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }).start();
-
         confirmationDialog.setVisible(true);
     }
 }
